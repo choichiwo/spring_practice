@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>이벤트 등록</title>
+
+    <style>
+        .is-danger {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+
+<!-- @{} URL 표현식  -->
+<form th:action="@{/events/new}" th:object="${event}" action="#" method="post">
+    <label for="name">이벤트 이름</label>
+    <input type="text" id="name" th:field="*{name}"/>
+    <label for="limit">제한 인원</label>
+    <input type="text" id="limit" name="limit" th:errorclass="is-danger" th:field="*{limit}"/>
+    <input type="submit" value="이벤트 등록"/>
+    <p th:errors="*{limit}">limit 에러 메시지</p>
+</form>
+</body>
+</html>

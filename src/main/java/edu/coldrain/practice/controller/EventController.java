@@ -5,9 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.thymeleaf.util.StringUtils;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -50,6 +56,26 @@ public class EventController {
         //즉, EventController 가 eventService 를 의존한다.
         final List<Event> eventList = eventService.getEvents();
         model.addAttribute("eventList", eventList);
+        return "events/eventList";
+    }
+
+    @GetMapping("/events/new")
+    public String eventForm(Model model) {
+        log.info("EventController.eventForm()");
+        model.addAttribute("event", new Event());
+        return "events/eventAdd";
+    }
+
+    @PostMapping("/events/new") //스프링 타입컨버터
+    public String createEvent(@Validated @ModelAttribute Event event, BindingResult bindingResult) {
+        // bindingResult 가 에러를 가지고 있다면
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(objectError -> log.info("error = {}", objectError));
+            return "events/eventAdd";
+        }
+        log.info("EventController.createEvent()");
+        log.info("event = {}", event);
+
         return "events/eventList";
     }
 }

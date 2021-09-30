@@ -8,14 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(EventController.class)
+@WebMvcTest({EventController.class, EventService.class})
 public class EventControllerTest {
 
     //의존성 자동 주입
@@ -45,4 +50,24 @@ public class EventControllerTest {
                 .andExpect(status().isOk()); //200
     }
 
+    @Test
+    public void createEventTest() throws Exception {
+        mockMvc.perform(post("/events/new")
+                        .param("name", "스프링 MVC 스터디 1차")
+                        .param("limit", "5"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void createEventTest2() throws Exception {
+        final MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+        multiValueMap.add("name", "스프링 MVC 스터디 1차");
+        multiValueMap.add("limit", "5");
+
+        mockMvc.perform(post("/events/new")
+                        .params(multiValueMap))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
