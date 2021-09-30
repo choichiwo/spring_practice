@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>이름</th>
+        <th>최대 인원수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="event : ${eventList}">
+        <td th:text="${event.id}"></td>
+        <td th:text="${event.name}"></td>
+        <td th:text="${event.limit}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
